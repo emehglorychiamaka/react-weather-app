@@ -7,9 +7,9 @@ export default function App() {
   return (
     <div className="App">
       <div className="container">
-        <Weather />
+        <Weather defaultCity="Aba, Abia State" />
         <footer>
-          created by{" "}
+          This project was coded by{" "}
           <a
             href="https://www.linkedin.com/in/emeh-glory-chiamaka-9586b0aa"
             target="_blank"
@@ -17,7 +17,7 @@ export default function App() {
           >
             Emeh Glory Chiamaka{" "}
           </a>{" "}
-          and open sourced on{" "}
+          open sourced on{" "}
           <a
             href="https://github.com/emehglorychiamaka/weather-react"
             target="_blank"
@@ -25,6 +25,10 @@ export default function App() {
           >
             {" "}
             Github
+          </a>{" "}
+          and{" "}
+          <a href="" target="_blank" rel="noopener noreferrer">
+            hosted on Netlify
           </a>
         </footer>
       </div>

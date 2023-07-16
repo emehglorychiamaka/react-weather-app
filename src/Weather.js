@@ -6,19 +6,20 @@ import WeatherForecast from "./WeatherForecast";
 
 import "./Weather.css";
 
-export default function Weather() {
-  constant[(ready, setReady)] = useState(false);
-  constant[(weatherData, setweatherData)] = useState({});
+export default function Weather(props) {
+  const [weatherData, setWeatherData] = useState({ ready: false });
+  const [city, setCity] = useState(props.defaultCity);
   function handleResponse(response) {
     setWeatherData({
       ready: true,
-      temperature: response.data.temperature.current,
-      city: response.data.city,
-      date: new Date(response.data.time * 1000),
+      coordinates: response.data.coord,
+      temperature: response.data.main.temp,
+      humidity: response.data.main.humidity,
+      date: new Date(response.data.dt * 1000),
+      description: response.data.weather[0].description,
+      icon: response.data.weather[0].icon,
       wind: response.data.wind.speed,
-      humidity: response.data.temperature.humidity,
-      conditions: response.data.condition.description,
-      iconUrl: response.data.condition.icon_url,
+      city: response.data.name,
     });
   }
 
@@ -30,22 +31,28 @@ export default function Weather() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    search(city);
+    search();
   }
 
   function handleCityChange(event) {
     setCity(event.target.value);
   }
 
+  function search() {
+    let apiKey = "889c7f3ed9dacba9e272eab879e0a867";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(handleResponse);
+  }
+
   if (weatherData.ready) {
     return (
-      <div className="weather">
+      <div className="Weather">
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-9">
               <input
                 type="search"
-                placeholder="Input city..."
+                placeholder="Enter a city.."
                 className="form-control"
                 autoFocus="on"
                 onChange={handleCityChange}
@@ -53,15 +60,15 @@ export default function Weather() {
             </div>
             <div className="col-3">
               <input
-                type="button"
+                type="submit"
                 value="Search"
-                className="btn btn-warning w-100"
+                className="btn btn-primary w-100"
               />
             </div>
           </div>
-        </form>{" "}
+        </form>
         <WeatherInfo data={weatherData} />
-        <WeatherForecast city={weatherData.city} />
+        <WeatherForecast coordinates={weatherData.coordinates} />
       </div>
     );
   } else {
